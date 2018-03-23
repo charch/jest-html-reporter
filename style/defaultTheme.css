@@ -25,7 +25,7 @@ header {
 	color: #666;
 	margin-bottom: 0.5rem;
 }
-#summary {
+.summary {
 	color: #999;
 	margin-bottom: 1rem;
 }
@@ -52,6 +52,7 @@ header {
 	color: #fff;
 }
 .suite-table {
+	table-layout: fixed;
 	width: 100%;
 	font-size: 0.85rem;
 	margin-bottom: 1em;
@@ -77,10 +78,12 @@ header {
 	vertical-align: top;
 }
 .suite-table td.suite {
+	word-wrap: break-word;
 	font-weight: bold;
 	width: 20%;
 }
 .suite-table td.test {
+	word-wrap: break-word;
 	font-style: italic;
 	width: 60%;
 }

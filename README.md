@@ -73,6 +73,7 @@ To configure this plugin, create a file named `jesthtmlreporter.config.json` in 
 | `dateFormat` | `STRING` | The format in which date/time should be formatted in the test report. Have a look in the [Documentation](https://github.com/Hargne/jest-html-reporter/wiki/Date-Format) for the available date format variables. | `"yyyy-mm-dd HH:MM:ss"`
 | `sort` | `STRING` | Sorts the test results with the given method. Available methods are: `"default"`, `"status"` More information can be found in the [Documentation](https://github.com/Hargne/jest-html-reporter/wiki/Sorting-Methods). | `"default"`
 | `executionMode` | `STRING` | Defines the execution mode. Avaiable modes are: `reporter`, `testResultsProcessor` | `"testResultsProcessor"`
+| `includeSuiteErrors` | `BOOLEAN` | If this setting is set to tru, this will output any errors occurring from the test suite itself | `false`
 
 #### *A note on styleOverridePath
 The plugin will search for the file from the root directory, therefore there is no need to prepend the string with `./` or `../`. Please have a look at the default styling (located within *style/defaultTheme.css*) for a reference of the elements available for styling.

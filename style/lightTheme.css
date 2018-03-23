@@ -39,7 +39,7 @@ header {
 	flex-grow: 1;
 	text-align: right;
 }
-#summary {
+.summary {
 	color: #999;
 	margin-bottom: 1rem;
 	order: 0;
@@ -68,6 +68,7 @@ header {
 	color: #fff;
 }
 .suite-table {
+	table-layout: fixed;
 	width: 100%;
 	font-size: 0.85rem;
 	margin-bottom: 2em;
@@ -100,10 +101,12 @@ header {
 	vertical-align: top;
 }
 .suite-table td.suite {
+	word-wrap: break-word;
 	font-weight: bold;
 	width: 20%;
 }
 .suite-table td.test {
+	word-wrap: break-word;
 	font-style: italic;
 	width: 60%;
 }

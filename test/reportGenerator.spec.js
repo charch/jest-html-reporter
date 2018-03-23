@@ -12,6 +12,7 @@ describe('reportGenerator', () => {
 				getDateFormat: () => 'yyyy-mm-dd HH:MM:ss',
 				getSort: () => 'default',
 				shouldIncludeFailureMessages: () => true,
+				shouldIncludeSuiteErrors: () => true,
 				getExecutionTimeWarningThreshold: () => 5,
 			};
 			const reportGenerator = new ReportGenerator(mockedConfig);
@@ -29,6 +30,7 @@ describe('reportGenerator', () => {
 				getDateFormat: () => 'yyyy-mm-dd HH:MM:ss',
 				getSort: () => 'default',
 				shouldIncludeFailureMessages: () => true,
+				shouldIncludeSuiteErrors: () => true,
 				getExecutionTimeWarningThreshold: () => 5,
 			};
 			const reportGenerator = new ReportGenerator(mockedConfig);

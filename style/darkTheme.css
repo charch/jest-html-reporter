@@ -38,7 +38,7 @@ header {
 	flex-grow: 1;
 	text-align: right;
 }
-#summary {
+.summary {
 	color: #ccc;
 	margin-bottom: 1rem;
 	order: 0;
@@ -67,6 +67,7 @@ header {
 	color: #fff;
 }
 .suite-table {
+	table-layout: fixed;
 	width: 100%;
 	font-size: 0.85rem;
 	margin-bottom: 2em;
@@ -83,6 +84,7 @@ header {
 	color: #efc52e;
 }
 .suite-table tr.pending td.suite {
+	word-wrap: break-word;
 	border-left: 0.5rem solid #efc52e;
 }
 /** FAILED */
@@ -103,6 +105,7 @@ header {
 	width: 20%;
 }
 .suite-table td.test {
+	word-wrap: break-word;
 	font-style: italic;
 	width: 60%;
 }

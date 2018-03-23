@@ -98,6 +98,9 @@ const getSort = () =>
 const getExecutionMode = () =>
 	process.env.JEST_HTML_REPORTER_EXECUTION_MODE || config.executionMode || 'testResultsProcessor';
 
+const shouldIncludeSuiteErrors = () =>
+	process.env.JEST_HTML_REPORTER_INCLUDE_SUITE_ERRORS || config.includeSuiteErrors || false;
+
 module.exports = {
 	config,
 	setup,
@@ -112,4 +115,5 @@ module.exports = {
 	getDateFormat,
 	getSort,
 	getExecutionMode,
+	shouldIncludeSuiteErrors,
 };

@@ -91,7 +91,13 @@ class ReportGenerator {
 			const timestamp = new Date(data.startTime);
 			metaDataContainer.ele('div', { id: 'timestamp' }, `Start: ${dateFormat(timestamp, this.config.getDateFormat())}`);
 			// Test Summary
-			metaDataContainer.ele('div', { id: 'summary' }, `
+			metaDataContainer.ele('div', { class: 'summary' }, `
+				${data.numTotalTestSuites} testsuites --
+				${data.numPassedTestSuites} passed /
+				${data.numFailedTestSuites} failed /
+				${data.numPendingTestSuites} pending
+			`);
+			metaDataContainer.ele('div', { class: 'summary' }, `
 				${data.numTotalTests} tests --
 				${data.numPassedTests} passed /
 				${data.numFailedTests} failed /
@@ -103,7 +109,13 @@ class ReportGenerator {
 
 			// Test Suites
 			sortedTestData.forEach((suite) => {
-				if (!suite.testResults || suite.testResults.length <= 0) { return; }
+				// This check is only needed once per suite, since if the suite fails, no tests from the suite will have run
+				// Therefore, there would only be a single fail within the suite
+				const testSuiteError = this.config.shouldIncludeSuiteErrors() &&
+					(typeof suite.failureMessage === 'string' &&
+					suite.failureMessage.length > 0);
+
+				if (!testSuiteError && (!suite.testResults || suite.testResults.length <= 0)) { return; }
 
 				// Suite Information
 				const suiteInfo = htmlOutput.ele('div', { class: 'suite-info' });
@@ -116,30 +128,52 @@ class ReportGenerator {
 				// Suite Test Table
 				const suiteTable = htmlOutput.ele('table', { class: 'suite-table', cellspacing: '0', cellpadding: '0' });
 
+				// An error occurred at the test suite level (usually due to syntax and parsing errors)
+				if (testSuiteError) {
+					this.renderTableRow({ item: suite, suiteTable });
+				}
+
 				// Test Results
 				suite.testResults.forEach((test) => {
-					const testTr = suiteTable.ele('tr', { class: test.status });
-
-					// Suite Name(s)
-					testTr.ele('td', { class: 'suite' }, test.ancestorTitles.join(' > '));
-
-					// Test name
-					const testTitleTd = testTr.ele('td', { class: 'test' }, test.title);
-
-					// Test Failure Messages
-					if (test.failureMessages && (this.config.shouldIncludeFailureMessages())) {
-						const failureMsgDiv = testTitleTd.ele('div', { class: 'failureMessages' });
-						test.failureMessages.forEach((failureMsg) => {
-							failureMsgDiv.ele('pre', { class: 'failureMsg' }, stripAnsi(failureMsg));
-						});
-					}
-
-					// Append data to <tr>
-					testTr.ele('td', { class: 'result' }, (test.status === 'passed') ? `${test.status} in ${test.duration / 1000}s` : test.status);
+					this.renderTableRow({ item: test, suiteTable });
 				});
 			});
 			return resolve(htmlOutput);
 		});
+	}
+
+	/**
+	 * Appends a test item to the HTML output
+	 * @param   {Object}   item			Jest test item.
+	 * @param	{Object}   suiteTable 	An element object that will be the parent of the new table row
+	 */
+	renderTableRow({ item, suiteTable }) {
+		// Setup the necessary information from the test item.
+		const title = item.title || item.filePath;
+		const suiteTitle = item.ancestorTitles ? item.ancestorTitles.join(' > ') : title;
+		const status = item.status || 'failed';
+		const messages = item.failureMessages || [item.failureMessage];
+		const outputMsg = item.failureMessages ? this.config.shouldIncludeFailureMessages() : this.config.shouldIncludeSuiteErrors();
+
+		// Create the test item output HTML
+		const testTr = suiteTable.ele('tr', { class: status });
+
+		// Suite Name(s)
+		testTr.ele('td', { class: 'suite' }, suiteTitle);
+
+		// Test name
+		const testTitleTd = testTr.ele('td', { class: 'test' }, title);
+
+		// Test Failure Messages
+		if (messages && outputMsg) {
+			const failureMsgDiv = testTitleTd.ele('div', { class: 'failureMessages' });
+			messages.forEach((failureMsg) => {
+				failureMsgDiv.ele('pre', { class: 'failureMsg' }, stripAnsi(failureMsg));
+			});
+		}
+
+		// Append data to <tr>
+		testTr.ele('td', { class: 'result' }, (status === 'passed') ? `${status} in ${item.duration / 1000}s` : status);
 	}
 }
 
